@@ -2,6 +2,7 @@ RpcDemo::Application.routes.draw do
   devise_for :users
 
   resources :commands, only: [:index, :create]
+  resources :tokens, only: [:index, :create, :destroy]
 
   # The priority is based upon order of creation:
   # first created -> highest priority.

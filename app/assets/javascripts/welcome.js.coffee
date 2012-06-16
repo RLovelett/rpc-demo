@@ -7,6 +7,9 @@ Ext.Loader.setConfig(
 )
 
 Ext.application(
-    name: 'RpcDemo'
-    autoCreateViewport: true
+  name: 'RpcDemo'
+  autoCreateViewport: true
+  controllers: [
+    'RpcDemo.controller.WelcomeController'
+  ]
 )
