@@ -1,8 +1,17 @@
 require 'faye'
 require ::File.expand_path('../config/environment',  __FILE__)
 
+class ServerAuthentication
+  def incoming(message, callback)
+    user = User.find_by_authentication_token message[:auth_token]
+    Rails.logger.info user
+    callback(message) unless user.nil?
+  end
+end
+
 Faye::WebSocket.load_adapter('thin')
 bayeux = Faye::RackAdapter.new(mount: '/faye', timeout: 45)
+bayeux.add_extension(ServerAuthentication.new)
 run bayeux
 
 # Monitoring of Faye
