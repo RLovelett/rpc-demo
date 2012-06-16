@@ -22,7 +22,9 @@ group :assets do
   gem 'uglifier', '>= 1.0.3'
 end
 
+gem 'rabl'
 gem 'resque', '~> 1.20.0', require: "resque/server"
+gem 'resque-meta'
 
 # To use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.0.0'

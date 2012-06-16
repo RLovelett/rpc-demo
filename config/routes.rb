@@ -1,4 +1,6 @@
 RpcDemo::Application.routes.draw do
+  resources :commands, only: [:index, :create]
+
   # The priority is based upon order of creation:
   # first created -> highest priority.
 
