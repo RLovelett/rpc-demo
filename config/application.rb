@@ -61,5 +61,8 @@ module RpcDemo
 
     # Version of your assets, change this if you want to expire all your assets
     config.assets.version = '1.0'
+
+    # Force the application to not access the DB or load modules when precompiling the assets
+    config.assets.initialize_on_precompile = false
   end
 end
