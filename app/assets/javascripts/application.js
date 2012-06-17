@@ -11,6 +11,7 @@
 // GO AFTER THE REQUIRES BELOW.
 //
 //= require extjs-rails
+//= require_tree ./app/proxy
 //= require_tree ./app/model
 //= require_tree ./app/store
 //= require_tree ./app/view
