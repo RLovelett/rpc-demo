@@ -59,7 +59,62 @@ RpcDemo::Application.routes.draw do
   mount Resque::Server, at: "/resque"
 
   # Faye
-  faye_server '/faye', timeout: 25
+  faye_server '/faye', timeout: 25 do
+    # Monitoring of Faye
+    # http://faye.jcoglan.com/ruby/monitoring.html
+
+    # Triggered when a new client connects and is issued with an ID.
+    bind(:handshake) do |client_id|
+      Rails.logger.info "[#{self.class}] Client {#{client_id}} handshake."
+    end
+
+    # Triggered when a client subscribes to a channel.
+    # This does not fire if a /meta/subscribe message is received for a
+    # subscription that already exists.
+    bind(:subscribe) do |client_id, channel|
+      Rails.logger.info "[#{self.class}] Client {#{client_id}} subscribed to #{channel}."
+    end
+
+    # Triggered when a client unsubscribes from a channel.
+    # This can fire either because the client explicitly sent a /meta/unsubscribe
+    # message, or because its session was timed out by the server.
+    bind(:unsubscribe) do |client_id, channel|
+      Rails.logger.info "[#{self.class}] Client {#{client_id}} unsubscribed from #{channel}."
+    end
+
+    # Triggered when a non-/meta/** message is published.
+    # Includes the client ID of the publisher (which may be nil), the channel
+    # the message was sent to and the data payload.
+    bind(:publish) do |client_id, channel, data|
+      Rails.logger.info "[#{self.class}] Client {#{client_id}} published data to #{channel}."
+      Rails.logger.info data
+    end
+
+    # Triggered when a client session ends, either because it explicitly sent a
+    # /meta/disconnect message or because its session was timed out by the server.
+    bind(:disconnect) do |client_id|
+      Rails.logger.info "[#{self.class}] Client {#{client_id}} disconnected."
+    end
+
+    # Routing
+    map '/commands/**' => CommandsController
+    #map :default       => :block
+
+    # Authentication
+    class ServerAuthentication
+      def incoming(message, callback)
+        user = User.find_by_authentication_token message['auth_token']
+        Rails.logger.info "[#{self.class}] #{message.inspect}"
+        Rails.logger.info "[#{self.class}] #{user}"
+        if user.nil?
+          message['error'] = 'Invalid user token.'
+        end
+        callback.call(message)
+      end
+    end
+    add_extension(ServerAuthentication.new)
+
+  end
 
   # See how all your routes lay out with "rake routes"
 
