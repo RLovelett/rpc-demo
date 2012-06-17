@@ -1,3 +1,10 @@
+GIT
+  remote: https://github.com/jamesotron/faye-rails.git
+  revision: 6a96c12826a061ac212f185b5a3a988bd71df1be
+  specs:
+    faye-rails (2012.1.16)
+      faye (~> 0.8.2)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -165,7 +172,7 @@ DEPENDENCIES
   coffee-rails (~> 3.2.1)
   devise
   extjs-rails
-  faye (~> 0.8.2)
+  faye-rails!
   rabl
   rails (= 3.2.3)
   resque (~> 1.20.0)

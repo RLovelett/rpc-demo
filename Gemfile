@@ -28,7 +28,7 @@ gem 'resque', '~> 1.20.0', require: "resque/server"
 gem 'resque-meta'
 
 # Faye Bayeux message server
-gem 'faye', '~> 0.8.2'
+gem 'faye-rails', git: 'https://github.com/jamesotron/faye-rails.git'
 gem 'thin'
 
 # To use ActiveModel has_secure_password
