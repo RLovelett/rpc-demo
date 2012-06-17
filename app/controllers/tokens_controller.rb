@@ -3,6 +3,7 @@ class TokensController < ApplicationController
 
   def index
     @user = current_user
+    @user.reset_authentication_token!
   end
 
   def create
