@@ -7,6 +7,18 @@ Ext.define('RpcDemo.proxy.Faye',
   timeout: 120
   retry: 5
 
+  subscriptions:
+    create: undefined
+    read: undefined
+    update: undefined
+    destroy: undefined
+
+  actionMethods:
+    create:  '/create'
+    read:    ''
+    update:  '/update'
+    destroy: '/destroy'
+
   doRequest : (operation, callback, scope) ->
     request = @buildRequest(operation, callback, scope)
     timeout = if Ext.isDefined(request.timeout) then request.timeout else @timeout
@@ -14,7 +26,7 @@ Ext.define('RpcDemo.proxy.Faye',
     url = @url
 
     if @socket and url != @socket.endpoint
-      @subscription.cancel()
+      @closeAllChannels()
       delete @socket
       @socket = null
 
@@ -23,7 +35,6 @@ Ext.define('RpcDemo.proxy.Faye',
         timeout: timeout
         retry: retry
       )
-      @subscription = @socket.subscribe(@channel, @onSubscription)
       @socket.addExtension(
         outgoing: (message, callback) =>
           message.auth_token = @token if @token
@@ -31,6 +42,12 @@ Ext.define('RpcDemo.proxy.Faye',
         incoming: (message, callback) =>
           callback(message)
       )
+      tempCallback = @createRequestCallback(request, operation, callback, scope)
+      channel = @stripTrailingSlash(@channel)
+      @subscriptions.create  = @socket.subscribe("#{channel}#{@actionMethods.create}", tempCallback)
+      @subscriptions.read    = @socket.subscribe("#{channel}#{@actionMethods.read}", tempCallback)
+      @subscriptions.update  = @socket.subscribe("#{channel}#{@actionMethods.update}", tempCallback)
+      @subscriptions.destroy = @socket.subscribe("#{channel}#{@actionMethods.destroy}", tempCallback)
 
     records = request.records
     records = Ext.Array.map(request.records, (record) ->
@@ -40,7 +57,20 @@ Ext.define('RpcDemo.proxy.Faye',
 
     return request
 
-  onSubscription : (message) ->
-    console.log(message)
+  closeAllChannels: () ->
+    Ext.Object.each(@subscriptions, (key, value, me) ->
+      value.close()
+    )
+
+  stripTrailingSlash: (str) ->
+    if str.substr(-1) == '/'
+      return str.substr(0, str.length - 1)
+    return str
+
+  createRequestCallback: (request, operation, callback, scope) ->
+    me = @
+
+    (data) ->
+      me.processResponse(true, operation, request, data, callback, scope)
 
 ) if Faye
