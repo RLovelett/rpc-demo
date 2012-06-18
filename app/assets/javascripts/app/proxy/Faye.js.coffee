@@ -11,9 +11,9 @@ Ext.define('RpcDemo.proxy.Faye',
     request = @buildRequest(operation, callback, scope)
     timeout = if Ext.isDefined(request.timeout) then request.timeout else @timeout
     retry = @retry || 5
-    url = request.url
+    url = @url
 
-    if @socket and url != @socket.URL
+    if @socket and url != @socket.endpoint
       @subscription.cancel()
       delete @socket
       @socket = null
