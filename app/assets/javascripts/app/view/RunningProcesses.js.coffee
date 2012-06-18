@@ -1,3 +1,4 @@
+store = Ext.create('RpcDemo.store.Commands')
 Ext.define('RpcDemo.view.RunningProcesses',
   extend: 'Ext.grid.Panel'
   alias: 'widget.running-processes'
@@ -7,7 +8,7 @@ Ext.define('RpcDemo.view.RunningProcesses',
   split: true
   height: 200
   minHeight: 200
-  store: Ext.getStore('Commands')
+  store: store
   columns: [{
     header: 'Command Id'
     dataIndex: 'resque_id'
@@ -22,7 +23,7 @@ Ext.define('RpcDemo.view.RunningProcesses',
     flex: 3
   }]
   bbar: Ext.create('Ext.PagingToolbar',
-    store: Ext.getStore('Commands')
+    store: store
     displayInfo: true
     displayMsg: 'Displaying Queued or Executing Commands {0} - {1} of {2}'
     emptyMsg: 'No commands are being executed.'
