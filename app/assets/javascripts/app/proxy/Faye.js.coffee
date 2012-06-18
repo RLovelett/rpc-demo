@@ -53,7 +53,6 @@ Ext.define('RpcDemo.proxy.Faye',
     records = Ext.Array.map(request.records, (record) ->
       record.data
     ) if records
-    @socket.publish(@channel, records)
 
     return request
 

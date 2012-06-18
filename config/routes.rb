@@ -102,15 +102,15 @@ RpcDemo::Application.routes.draw do
 
     # Authentication
     class ServerAuthentication
-      def incoming(message, callback)
-        user = User.find_by_authentication_token message['auth_token']
-        Rails.logger.info "[#{self.class}] #{message.inspect}"
-        Rails.logger.info "[#{self.class}] #{user}"
-        if user.nil?
-          message['error'] = 'Invalid user token.'
-        end
-        callback.call(message)
-      end
+      #def incoming(message, callback)
+        #user = User.find_by_authentication_token message['auth_token']
+        #Rails.logger.info "[#{self.class}] #{message.inspect}"
+        #Rails.logger.info "[#{self.class}] #{user}"
+        #if user.nil?
+          #message['error'] = 'Invalid user token.'
+        #end
+        #callback.call(message)
+      #end
     end
     add_extension(ServerAuthentication.new)
 
