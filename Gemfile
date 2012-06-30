@@ -27,6 +27,8 @@ gem 'rabl'
 gem 'resque', '~> 1.20.0', require: "resque/server"
 gem 'resque-meta'
 
+gem 'faker'
+
 # Faye Bayeux message server
 gem 'faye-rails', git: 'https://github.com/jamesotron/faye-rails.git'
 gem 'thin'
