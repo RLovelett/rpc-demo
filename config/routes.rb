@@ -97,8 +97,11 @@ RpcDemo::Application.routes.draw do
     end
 
     # Routing
-    map '/commands/**' => CommandsController
-    #map :default       => :block
+    class FayeCommandController < FayeRails::Controller
+      observe Command, :after_create do |new_widget|
+        FayeCommandController.publish('/commands/new', new_widget.attributes)
+      end
+    end
 
     # Authentication
     class ServerAuthentication
